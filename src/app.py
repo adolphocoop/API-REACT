@@ -30,13 +30,14 @@ def createUser():
 
 @app.route('/users', methods=['GET'])
 def getUsers():
-    #Creamos una lista users
+    #Creamos una lista vacia users
     users=[]
     #Por cada documento en la respuesta db.find
     for doc in db.find():
         #Vamos añadir los objetos a la lista 
         users.append({
             #La conversion del id a un string 
+            #obtenemos el id en string
             '_id': str(ObjectId(doc['_id'])),
             'name': doc['name'],
             'email': doc['email'],
@@ -60,9 +61,12 @@ def getUser(id):
 
     })
 
-@app.route('/users/<id>', methods=['GET'])
-def deleteUser():
-    return 'Hola bb'
+@app.route('/users/<id>', methods=['DELETE'])
+def deleteUser(id):
+    #Realizamos una consulta
+    db.delete_one({'_id': ObjectId(id)})
+    print(id)
+    return jsonify({'msg': 'Usuario eliminado'})
 
 @app.route('/users/<id>', methods=['PUT'])
 def updateUser():
